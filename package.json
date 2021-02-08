@@ -1,0 +1,10 @@
+{
+  "name": "bounded-app",
+  "version": "1.0.0",
+  "description": "A workspace to outline decoupled arch",
+  "main": "index.js",
+  "author": "James Barzegar",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["workspaces/*"]
+}

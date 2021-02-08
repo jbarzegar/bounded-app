@@ -1,0 +1,11 @@
+{
+  "name": "@app/core",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "files": ["todo"],
+  "dependencies": {
+    "nanoid": "^3.1.20",
+    "typescript": "^4.1.3"
+  }
+}
