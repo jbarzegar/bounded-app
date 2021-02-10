@@ -7,6 +7,7 @@ import { useTodoActions } from './actions'
 export enum Mutations {
   toggle = 'TOGGLE_TODO',
   create = 'CREATE_TODO',
+  delete = 'DELETE_TODO',
 }
 
 type MutationFn<Response, Variables, Error = unknown> = (
@@ -36,4 +37,18 @@ export const useMutationCreateTodo: MutationFn<
   const todoCreateMutation = useMutation(Mutations.create, actions.add, options)
 
   return todoCreateMutation
+}
+
+export const useMutationDeleteTodo: MutationFn<
+  void,
+  { id: string }
+> = options => {
+  const actions = useTodoActions()
+  const todoDeleteMutation = useMutation(
+    Mutations.delete,
+    ({ id }) => actions.delete(id),
+    options
+  )
+
+  return todoDeleteMutation
 }

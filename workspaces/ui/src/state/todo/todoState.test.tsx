@@ -8,7 +8,11 @@ import { AddTodoPayload, TodoActions } from '@app/core/todo/actions'
 
 import { TodoActionProvider } from '.'
 import { useQueryGetAllTodos } from './queries'
-import { useMutationToggleTodo, useMutationCreateTodo } from './mutations'
+import {
+  useMutationToggleTodo,
+  useMutationCreateTodo,
+  useMutationDeleteTodo,
+} from './mutations'
 
 const sampleTodos: AddTodoPayload[] = [
   { type: 'genericTodo', title: 'Get milk' },
@@ -106,7 +110,6 @@ describe('useMutationCreateTodo', () => {
     await waitForNextUpdate()
 
     expect(result.current.status).toEqual('loading')
-    console.log(result.current, result.current.error)
 
     await waitForNextUpdate()
 
@@ -114,5 +117,38 @@ describe('useMutationCreateTodo', () => {
     expect(result.current.data?.status).toEqual('doing')
     expect(typeof result.current.data?.id).toEqual('string')
     expect(pick(result.current.data, Object.keys(shape))).toMatchObject(shape)
+  })
+})
+
+describe('useMutationDeleteTodo', () => {
+  it('should delete a todo', async () => {
+    const bindings = new MockTodoBinding(sampleTodos)
+    const { result, waitForNextUpdate } = renderHook(
+      () => useMutationDeleteTodo(),
+      {
+        wrapper: TestWrapper,
+        initialProps: {
+          bindings,
+        },
+      }
+    )
+
+    expect(result.current.status).toEqual('idle')
+
+    const [todo] = await bindings.getAll()
+
+    act(() => result.current.mutate({ id: todo.id }))
+
+    await waitForNextUpdate()
+
+    expect(result.current.status).toEqual('loading')
+
+    await waitForNextUpdate()
+
+    expect(result.current.status).toEqual('success')
+
+    await expect(() => bindings.get(todo.id)).rejects.toStrictEqual(
+      new Error('notFound')
+    )
   })
 })
