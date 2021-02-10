@@ -1,4 +1,5 @@
-import { FC, ChangeEvent } from 'react'
+import { FC, useState } from 'react'
+import { useField, Formik, Form } from 'formik'
 import {
   Box,
   Button,
@@ -9,10 +10,45 @@ import {
   List,
   ListItem,
   ListItemText,
+  TextField,
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { Header } from 'components/Header'
 import { useMutationToggleTodo, useQueryGetAllTodos } from 'state/todo'
+
+type FieldProps = {
+  id?: string
+  name: string
+  label: string
+  helperText?: string
+}
+const Field: FC<FieldProps> = ({ helperText, ...props }) => {
+  const [field, { touched, error }] = useField(props)
+
+  return (
+    <TextField
+      {...props}
+      {...field}
+      error={touched && !!error}
+      helperText={!!error ? error : helperText}
+    />
+  )
+}
+const NewTodo = () => {
+  return (
+    <Formik
+      initialValues={{
+        title: '',
+      }}
+      onSubmit={values => console.log(values)}
+    >
+      <Form>
+        <Field name='title' label='Title' />
+        <Button type='submit'>Save</Button>
+      </Form>
+    </Formik>
+  )
+}
 
 const TodoList = () => {
   const { status, data = [], refetch } = useQueryGetAllTodos()
@@ -22,11 +58,8 @@ const TodoList = () => {
     },
   })
 
-  type FnHandleChange = (
-    id: string
-  ) => (event: ChangeEvent<HTMLInputElement>) => any
-  const handleChange: FnHandleChange = id => event =>
-    toggleTodoMutation.mutate({ id, done: event.currentTarget.checked })
+  const toggleTodo = (id: string, done: boolean) =>
+    toggleTodoMutation.mutate({ id, done })
 
   return (
     <Card>
@@ -47,7 +80,7 @@ const TodoList = () => {
               <Checkbox
                 color='primary'
                 checked={todo.status === 'done'}
-                onChange={handleChange(todo.id)}
+                onChange={e => toggleTodo(todo.id, e.currentTarget.checked)}
               />
               <ListItemText>{todo.title}</ListItemText>
             </ListItem>
@@ -59,6 +92,12 @@ const TodoList = () => {
 }
 
 export const TodoRoot: FC = () => {
+  type View = 'listTodos' | 'addNewTodo'
+
+  const [currentView, setCurrentView] = useState<View>('listTodos')
+
+  const addNewTodo = () => setCurrentView('addNewTodo')
+
   return (
     <Container>
       <Box
@@ -68,12 +107,19 @@ export const TodoRoot: FC = () => {
         justifyContent='space-between'
       >
         <Header variant='h3'>Todos</Header>
-        <Button color='primary' variant='contained' endIcon={<AddIcon />}>
+        <Button
+          color='primary'
+          variant='contained'
+          endIcon={<AddIcon />}
+          onClick={addNewTodo}
+        >
           Add Todo
         </Button>
       </Box>
 
-      <TodoList />
+      {currentView === 'addNewTodo' && <NewTodo />}
+
+      {currentView === 'listTodos' && <TodoList />}
     </Container>
   )
 }
