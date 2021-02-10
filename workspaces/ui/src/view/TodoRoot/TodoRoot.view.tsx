@@ -12,11 +12,10 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { Header } from 'components/Header'
-
 import { useMutationToggleTodo, useQueryGetAllTodos } from 'state/todo'
 
 const TodoList = () => {
-  const { refetch, status, data = [] } = useQueryGetAllTodos()
+  const { status, data = [], refetch } = useQueryGetAllTodos()
   const toggleTodoMutation = useMutationToggleTodo({
     onSuccess() {
       refetch()
@@ -27,11 +26,15 @@ const TodoList = () => {
     id: string
   ) => (event: ChangeEvent<HTMLInputElement>) => any
   const handleChange: FnHandleChange = id => event =>
-    toggleTodoMutation.mutate({ id, checked: event.currentTarget.checked })
+    toggleTodoMutation.mutate({ id, done: event.currentTarget.checked })
 
   return (
     <Card>
-      {status === 'loading' && <Spinner />}
+      {status === 'loading' && (
+        <Box alignItems='center' justifyContent='center' display='flex' p={4}>
+          <Spinner />
+        </Box>
+      )}
       {status === 'success' && data?.length <= 0 && (
         <Box padding={2}>
           <Header variant='subtitle1'>You have no todos</Header>

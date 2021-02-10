@@ -1,10 +1,8 @@
 import { Story, Meta } from '@storybook/react/types-6-0'
-import { QueryClient, QueryClientProvider } from 'react-query'
-
-import { ThemeProvider } from 'theme'
 import { TodoRoot } from 'view/TodoRoot'
-import { TodoActionProvider } from 'actions/todo'
 import { MockTodoBinding } from 'lib/todo/bindings/mock'
+import { TodoActionProvider } from 'state/todo/actions'
+import { AppProvider } from 'App'
 
 export default {
   title: 'View/TodoRoot',
@@ -12,7 +10,6 @@ export default {
 } as Meta
 
 export const Mounted: Story = () => {
-  const queryClient = new QueryClient()
   const todoBindings = new MockTodoBinding([
     {
       type: 'genericTodo',
@@ -31,27 +28,22 @@ export const Mounted: Story = () => {
   ])
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TodoActionProvider bindings={todoBindings}>
-          <TodoRoot />
-        </TodoActionProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <AppProvider>
+      <TodoActionProvider bindings={todoBindings}>
+        <TodoRoot />
+      </TodoActionProvider>
+    </AppProvider>
   )
 }
 
 export const EmptyState = () => {
-  const queryClient = new QueryClient()
   const todoBindings = new MockTodoBinding()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <TodoActionProvider bindings={todoBindings}>
-          <TodoRoot />
-        </TodoActionProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <AppProvider>
+      <TodoActionProvider bindings={todoBindings}>
+        <TodoRoot />
+      </TodoActionProvider>
+    </AppProvider>
   )
 }
