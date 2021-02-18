@@ -1,0 +1,17 @@
+{
+  "name": "@app/api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "backpack-core": "^0.8.4"
+  },
+  "dependencies": {
+    "@app/core": "1.0.0",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "lodash": "^4.17.20",
+    "lowdb": "^1.0.0",
+    "morgan": "^1.10.0"
+  }
+}
