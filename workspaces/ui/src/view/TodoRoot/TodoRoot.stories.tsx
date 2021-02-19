@@ -1,8 +1,10 @@
 import { Story, Meta } from '@storybook/react/types-6-0'
-import { TodoRoot } from 'view/TodoRoot'
-import { MockTodoBinding } from 'lib/todo/bindings/mock'
-import { TodoActionProvider } from 'state/todo/actions'
+import { TodoActions } from '@app/core/todo'
+import { MockTodoBinding } from '@app/core/todo/mockBinding'
+
 import { AppProvider } from 'App'
+import { TodoRoot } from 'view/TodoRoot'
+import { TodoActionProvider } from 'state/todo/actions'
 
 export default {
   title: 'View/TodoRoot',
@@ -27,9 +29,11 @@ export const Mounted: Story = () => {
     },
   ])
 
+  const bindings = new TodoActions(todoBindings)
+
   return (
     <AppProvider>
-      <TodoActionProvider bindings={todoBindings}>
+      <TodoActionProvider bindings={bindings}>
         <TodoRoot />
       </TodoActionProvider>
     </AppProvider>
@@ -38,10 +42,10 @@ export const Mounted: Story = () => {
 
 export const EmptyState = () => {
   const todoBindings = new MockTodoBinding()
-
+  const bindings = new TodoActions(todoBindings)
   return (
     <AppProvider>
-      <TodoActionProvider bindings={todoBindings}>
+      <TodoActionProvider bindings={bindings}>
         <TodoRoot />
       </TodoActionProvider>
     </AppProvider>

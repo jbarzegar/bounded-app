@@ -1,5 +1,5 @@
 import { useQuery, QueryOptions, UseQueryResult } from 'react-query'
-import { Todo } from '@app/core/todo/entities'
+import { Todo } from '@app/core/todo'
 
 import { useTodoActions } from './actions'
 

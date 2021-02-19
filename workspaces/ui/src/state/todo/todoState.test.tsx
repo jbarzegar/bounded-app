@@ -3,8 +3,8 @@ import { renderHook, act } from '@testing-library/react-hooks'
 import { pick } from 'lodash'
 
 import { AppProvider } from 'App'
-import { MockTodoBinding } from 'lib/todo/bindings/mock'
-import { AddTodoPayload, TodoActions } from '@app/core/todo/actions'
+import { AddTodoPayload, TodoActions } from '@app/core/todo'
+import { MockTodoBinding } from '@app/core/todo/mockBinding'
 
 import { TodoActionProvider } from '.'
 import { useQueryGetAllTodos } from './queries'
@@ -21,7 +21,7 @@ const sampleTodos: AddTodoPayload[] = [
 
 const TestWrapper = ({
   children,
-  bindings = new MockTodoBinding(sampleTodos),
+  bindings = new TodoActions(new MockTodoBinding(sampleTodos)),
 }: PropsWithChildren<{ bindings: TodoActions }>) => (
   <AppProvider>
     <TodoActionProvider bindings={bindings}>{children}</TodoActionProvider>
@@ -56,7 +56,7 @@ describe('useQueryGetAllTodos', () => {
 
 describe('useMutationToggleTodo', () => {
   it('should toggle a todo to done', async () => {
-    const bindings = new MockTodoBinding(sampleTodos)
+    const bindings = new TodoActions(new MockTodoBinding(sampleTodos))
     const { result, waitForNextUpdate } = renderHook(
       () => useMutationToggleTodo(),
       {
@@ -79,14 +79,14 @@ describe('useMutationToggleTodo', () => {
     expect(result.current.status).toEqual('success')
     expect(result.current.data?.status).toEqual('done')
 
-    const updatedTodo = await bindings.get(todo.id)
+    const updatedTodo = await bindings.getOne(todo.id)
     expect(updatedTodo.status).toEqual('done')
   })
 })
 
 describe('useMutationCreateTodo', () => {
   it('should create a new todo item', async () => {
-    const bindings = new MockTodoBinding(sampleTodos)
+    const bindings = new TodoActions(new MockTodoBinding(sampleTodos))
     const { result, waitForNextUpdate } = renderHook(
       () => useMutationCreateTodo(),
       {
@@ -122,7 +122,7 @@ describe('useMutationCreateTodo', () => {
 
 describe('useMutationDeleteTodo', () => {
   it('should delete a todo', async () => {
-    const bindings = new MockTodoBinding(sampleTodos)
+    const bindings = new TodoActions(new MockTodoBinding(sampleTodos))
     const { result, waitForNextUpdate } = renderHook(
       () => useMutationDeleteTodo(),
       {
@@ -147,7 +147,7 @@ describe('useMutationDeleteTodo', () => {
 
     expect(result.current.status).toEqual('success')
 
-    await expect(() => bindings.get(todo.id)).rejects.toStrictEqual(
+    await expect(() => bindings.getOne(todo.id)).rejects.toStrictEqual(
       new Error('notFound')
     )
   })

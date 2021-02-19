@@ -5,7 +5,7 @@ import {
   PropsWithChildren,
   useMemo,
 } from 'react'
-import { TodoActions } from '@app/core/todo/actions'
+import { TodoActions } from '@app/core/todo'
 const todoActionContext = createContext<TodoActions>(undefined as any)
 
 export const TodoActionProvider: FC<

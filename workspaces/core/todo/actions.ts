@@ -1,23 +1,67 @@
-import { Todo } from './entities'
+import { Todo, AddTodoPayload, EditTodoPayload } from "./entities";
+import { ITodoBindings } from "./binding";
 
-// need to  create a custom omit here
-// https://github.com/microsoft/TypeScript/issues/28791#issuecomment-443520161
-/**
- * > Pick isn't distributive over union types, when the input type is a union it is effectively treated as a single object type with only the common properties, each having a union of the respective property types.
- */
+export interface ITodoActions {
+  getAll(): Promise<Todo[]>;
+  getOne(id: string): Promise<Todo>;
+  createOne(payload: AddTodoPayload): Promise<Todo>;
+  updateOne(id: string, payload: EditTodoPayload): Promise<Todo>;
+  toggleTodo(id: string, done: boolean): Promise<Todo>;
+  deleteOne(id: string): Promise<void>;
+}
 
-type AllKeys<T> = T extends T ? keyof T : never
-type Omit<T, K extends AllKeys<T>> = T extends T
-  ? Pick<T, Exclude<keyof T, K>>
-  : never
+export class TodoActions implements ITodoActions {
+  private binding: ITodoBindings;
 
-export type AddTodoPayload = Omit<Todo, 'status' | 'id'>
-export type EditTodoPayload = Partial<Omit<Todo, 'id'>>
+  constructor(todoBindings: ITodoBindings) {
+    this.binding = todoBindings;
 
-export interface TodoActions {
-  getAll(): Promise<Todo[]>
-  get(id: Todo['id']): Promise<Todo>
-  add(payload: AddTodoPayload): Promise<Todo>
-  update(id: Todo['id'], updateData: EditTodoPayload): Promise<Todo>
-  delete(id: Todo['id']): Promise<void>
+    // damn it js
+    this.createOne = this.createOne.bind(this);
+  }
+
+  async createOne(payload: AddTodoPayload): Promise<Todo> {
+    try {
+      const todo = await this.binding.add(payload);
+      return todo;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  updateOne(id: string, payload: EditTodoPayload): Promise<Todo> {
+    try {
+      return this.binding.update(id, payload);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  getAll(): Promise<Todo[]> {
+    return this.binding.getAll();
+  }
+
+  getOne(id: string): Promise<Todo> {
+    return this.binding.get(id);
+  }
+
+  async toggleTodo(id: string, done: boolean): Promise<Todo> {
+    try {
+      const todo = await this.binding.update(id, {
+        status: done ? "done" : "doing",
+      });
+
+      return todo;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteOne(id: string): Promise<void> {
+    try {
+      await this.binding.delete(id);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

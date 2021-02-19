@@ -6,5 +6,8 @@
   "author": "James Barzegar",
   "license": "MIT",
   "private": true,
-  "workspaces": ["workspaces/*"]
+  "workspaces": {
+    "packages":   ["workspaces/*"],
+    "nohoist": ["react-scripts/**", "babel-loader", "jest"]
+  }
 }

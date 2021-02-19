@@ -1,6 +1,5 @@
 import { useMutation, MutationOptions, UseMutationResult } from 'react-query'
-import { Todo } from '@app/core/todo/entities'
-import { AddTodoPayload } from '@app/core/todo/actions'
+import { AddTodoPayload, Todo } from '@app/core/todo'
 
 import { useTodoActions } from './actions'
 
@@ -19,10 +18,9 @@ type FnUseMutationToggleTodo = MutationFn<Todo, ToggleTodoMutationVariables>
 export const useMutationToggleTodo: FnUseMutationToggleTodo = options => {
   const actions = useTodoActions()
 
-  const calcStatus = (done: boolean) => (done ? 'done' : 'doing')
   const todoMutation = useMutation(
     Mutations.toggle,
-    ({ id, done }) => actions.update(id, { status: calcStatus(done) }),
+    ({ id, done }) => actions.toggleTodo(id, done),
     options
   )
 
@@ -34,7 +32,11 @@ export const useMutationCreateTodo: MutationFn<
   AddTodoPayload
 > = options => {
   const actions = useTodoActions()
-  const todoCreateMutation = useMutation(Mutations.create, actions.add, options)
+  const todoCreateMutation = useMutation(
+    Mutations.create,
+    actions.createOne,
+    options
+  )
 
   return todoCreateMutation
 }
@@ -46,7 +48,7 @@ export const useMutationDeleteTodo: MutationFn<
   const actions = useTodoActions()
   const todoDeleteMutation = useMutation(
     Mutations.delete,
-    ({ id }) => actions.delete(id),
+    ({ id }) => actions.deleteOne(id),
     options
   )
 

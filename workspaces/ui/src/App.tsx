@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { ThemeProvider } from 'theme'
-import { TodoActions } from '@app/core/todo/actions'
+import { TodoActions } from '@app/core/todo'
 import { TodoActionProvider } from 'state/todo/actions'
 import { TodoRoot } from 'view/TodoRoot'
 
