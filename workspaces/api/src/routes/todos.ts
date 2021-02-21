@@ -1,11 +1,13 @@
 import { Router as getRoute } from 'express'
-import { DbErrors } from '@lib/todo/bindings/lowdb'
 import { AddTodoPayload, EditTodoPayload, TodoActions } from '@app/core/todo'
+
+import { DbErrors } from 'lib/todo/bindings/lowdb'
+import { TodoCreateSchema, todoCreateSchema } from 'validation/todos.validation'
 import { FnUseRoute } from 'types'
 
 type IdParams = { id: string }
 
-export const useTodoRoute: FnUseRoute<TodoActions> = actions => {
+export const todoRoute: FnUseRoute<TodoActions> = actions => {
   const app = getRoute()
 
   app.get('/', (_, res) => {
@@ -30,10 +32,30 @@ export const useTodoRoute: FnUseRoute<TodoActions> = actions => {
       })
   )
 
-  app.post<never, any, AddTodoPayload>('/', async (req, res) => {
-    const payload = req.body
+  app.post<never, any, TodoCreateSchema>('/', async (req, res) => {
+    const { body } = req
+
+    try {
+      await todoCreateSchema.validate(body)
+    } catch (e) {
+      console.log('validation error', e)
+      res.status(400).send(e)
+      return
+    }
+
+    const mapTodo: () => AddTodoPayload = () => {
+      const { title, notes = [] } = body
+      const partialPayload = { title, notes }
+
+      if (body.dueDate) {
+        return { type: 'timedTodo', dueDate: body.dueDate, ...partialPayload }
+      }
+
+      return { type: 'genericTodo', ...partialPayload }
+    }
+
     actions
-      .createOne(payload)
+      .createOne(mapTodo())
       .then(todo => res.status(201).json(todo).send())
       .catch(err => res.status(500).json(err).send())
   })
@@ -47,4 +69,6 @@ export const useTodoRoute: FnUseRoute<TodoActions> = actions => {
   app.delete<IdParams>('/:id', async (req, res) => {
     actions.deleteOne(req.params.id).then(() => res.send(204))
   })
+
+  return app
 }

@@ -12,6 +12,14 @@
       "type": "genericTodo",
       "title": "Make dinner",
       "notes": ["Spelt pasta", "with sausage and kale"]
+    },
+    {
+      "id": "76YBIEiosFrherTbRGzzO",
+      "status": "doing",
+      "type": "timedTodo",
+      "dueDate": "2021-02-21T16:44:44.838Z",
+      "title": "A time todo",
+      "notes": ["yeet"]
     }
   ]
 }

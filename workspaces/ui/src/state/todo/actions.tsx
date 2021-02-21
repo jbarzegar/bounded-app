@@ -8,9 +8,9 @@ import {
 import { TodoActions } from '@app/core/todo'
 const todoActionContext = createContext<TodoActions>(undefined as any)
 
-export const TodoActionProvider: FC<
-  PropsWithChildren<{ bindings: TodoActions }>
-> = ({ children, bindings }) => {
+export const TodoActionProvider: FC<PropsWithChildren<{
+  bindings: TodoActions
+}>> = ({ children, bindings }) => {
   const value = useMemo(() => bindings, [bindings])
   return (
     <todoActionContext.Provider value={value}>

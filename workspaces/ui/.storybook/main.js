@@ -7,9 +7,12 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/preset-create-react-app',
   ],
-  webpackFinal: (conf) => {
-    conf.resolve.modules = [...conf.resolve.modules, path.resolve(__dirname, '../src')]
+  webpackFinal: conf => {
+    conf.resolve.modules = [
+      ...conf.resolve.modules,
+      path.resolve(__dirname, '../src'),
+    ]
 
     return conf
-  }
+  },
 }
