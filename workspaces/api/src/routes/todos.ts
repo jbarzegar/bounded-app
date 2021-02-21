@@ -1,50 +1,50 @@
-import { Router as getRoute } from "express";
-import { DbErrors } from "../../lib/todo/bindings/lowdb";
-import { AddTodoPayload, EditTodoPayload, TodoActions } from "@app/core/todo";
+import { Router as getRoute } from 'express'
+import { DbErrors } from '@lib/todo/bindings/lowdb'
+import { AddTodoPayload, EditTodoPayload, TodoActions } from '@app/core/todo'
+import { FnUseRoute } from 'types'
 
-type IdParams = { id: string };
+type IdParams = { id: string }
 
-export const useTodoRoutes: (actions: TodoActions) => () => void = (
-  actions
-) => () => {
-  const route = getRoute();
+export const useTodoRoute: FnUseRoute<TodoActions> = actions => {
+  const app = getRoute()
 
-  route.get("/", (_, res) =>
+  app.get('/', (_, res) => {
     actions
       .getAll()
-      .then((todos) => res.status(200).json(todos))
-      .catch((err) => res.status(400).send(err))
-  );
+      .then(todos => {
+        console.log(todos)
+        res.status(200).send(todos)
+      })
+      .catch(err => res.status(400).send(err))
+  })
 
-  route.get<IdParams>("/:id", (req, res) =>
+  app.get<IdParams>('/:id', (req, res) =>
     actions
       .getOne(req.params.id)
-      .then((todo) => res.status(200).json(todo))
+      .then(todo => res.status(200).json(todo))
       .catch((err: Error) => {
-        if (err.message.startsWith(DbErrors.notFound)) res.status(404);
-        else res.status(500);
+        if (err.message.startsWith(DbErrors.notFound)) res.status(404)
+        else res.status(500)
 
-        res.json({ name: err.name, message: err.message });
+        res.json({ name: err.name, message: err.message })
       })
-  );
+  )
 
-  route.post<never, any, AddTodoPayload>("/", async (req, res) => {
-    const payload = req.body;
+  app.post<never, any, AddTodoPayload>('/', async (req, res) => {
+    const payload = req.body
     actions
       .createOne(payload)
-      .then((todo) => res.send(200).json(todo))
-      .catch((err) => res.status(500).json(err));
-  });
+      .then(todo => res.status(201).json(todo).send())
+      .catch(err => res.status(500).json(err).send())
+  })
 
-  route.patch<IdParams, any, EditTodoPayload>("/:id", async (req, res) => {
+  app.patch<IdParams, any, EditTodoPayload>('/:id', async (req, res) => {
     actions
       .updateOne(req.params.id, req.body)
-      .then((todo) => res.status(200).json(todo));
-  });
+      .then(todo => res.status(200).json(todo))
+  })
 
-  route.delete<IdParams>("/", async (req, res) => {
-    actions.deleteOne(req.params.id).then(() => res.send(204));
-  });
-
-  return route;
-};
+  app.delete<IdParams>('/:id', async (req, res) => {
+    actions.deleteOne(req.params.id).then(() => res.send(204))
+  })
+}

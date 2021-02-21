@@ -1,0 +1,17 @@
+{
+  "todos": [
+    {
+      "id": "6enjKkyJXy4e0w1Dwfsnl",
+      "status": "doing",
+      "type": "genericTodo",
+      "title": "Get milk"
+    },
+    {
+      "id": "gTD2wPKA1iqb4vT9yZFgj",
+      "status": "doing",
+      "type": "genericTodo",
+      "title": "Make dinner",
+      "notes": ["Spelt pasta", "with sausage and kale"]
+    }
+  ]
+}

@@ -32,15 +32,6 @@
       "react-app/jest"
     ]
   },
-  "prettier": {
-    "arrowParens": "avoid",
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "bracketSpacing": true,
-    "jsxBracketSameLine": false,
-    "jsxSingleQuote": true
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -69,10 +60,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/yup": "^0.29.11",
-    "husky": "^4.3.8",
     "jest": "^26.6.3",
-    "prettier": "^2.2.1",
-    "pretty-quick": "^3.1.0",
-        "ts-jest": "^26.5.1"
+    "ts-jest": "^26.5.1"
   }
 }

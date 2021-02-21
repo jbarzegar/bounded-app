@@ -6,8 +6,26 @@
   "author": "James Barzegar",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "format:code": "pretty-quick"
+  },
   "workspaces": {
-    "packages":   ["workspaces/*"],
-    "nohoist": ["react-scripts/**", "babel-loader", "jest"]
+    "packages": [
+      "workspaces/*"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^5.0.9",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "semi": false,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": false,
+    "jsxSingleQuote": true
   }
 }
