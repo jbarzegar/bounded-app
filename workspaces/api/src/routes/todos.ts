@@ -7,6 +7,21 @@ import { FnUseRoute } from 'types'
 
 type IdParams = { id: string }
 
+const mapTodo: (payload: TodoCreateSchema) => AddTodoPayload = payload => {
+  const { title, notes = [] } = payload
+  const partialPayload = { title, notes }
+
+  if (payload.dueDate) {
+    return {
+      type: 'timedTodo',
+      dueDate: payload.dueDate,
+      ...partialPayload,
+    }
+  }
+
+  return { type: 'genericTodo', ...partialPayload }
+}
+
 export const todoRoute: FnUseRoute<TodoActions> = actions => {
   const app = getRoute()
 
@@ -33,29 +48,15 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
   )
 
   app.post<never, any, TodoCreateSchema>('/', async (req, res) => {
-    const { body } = req
-
     try {
-      await todoCreateSchema.validate(body)
+      await todoCreateSchema.validate(req.body)
     } catch (e) {
-      console.log('validation error', e)
       res.status(400).send(e)
       return
     }
 
-    const mapTodo: () => AddTodoPayload = () => {
-      const { title, notes = [] } = body
-      const partialPayload = { title, notes }
-
-      if (body.dueDate) {
-        return { type: 'timedTodo', dueDate: body.dueDate, ...partialPayload }
-      }
-
-      return { type: 'genericTodo', ...partialPayload }
-    }
-
     actions
-      .createOne(mapTodo())
+      .createOne(mapTodo(req.body))
       .then(todo => res.status(201).json(todo).send())
       .catch(err => res.status(500).json(err).send())
   })
@@ -64,6 +65,13 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
     actions
       .updateOne(req.params.id, req.body)
       .then(todo => res.status(200).json(todo))
+  })
+
+  app.patch<IdParams, any, IdParams>('/:id/toggle', async (req, res) => {
+    actions
+      .toggleTodo(req.params.id)
+      .then(todo => res.status(201).json(todo).send())
+      .catch(err => res.status(500).json(err).send())
   })
 
   app.delete<IdParams>('/:id', async (req, res) => {

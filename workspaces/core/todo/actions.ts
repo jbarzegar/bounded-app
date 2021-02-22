@@ -45,10 +45,11 @@ export class TodoActions implements ITodoActions {
     return this.binding.get(id)
   }
 
-  async toggleTodo(id: string, done: boolean): Promise<Todo> {
+  async toggleTodo(id: string, done?: boolean): Promise<Todo> {
     try {
+      const { status } = await this.getOne(id)
       const todo = await this.binding.update(id, {
-        status: done ? 'done' : 'doing',
+        status: status === 'done' ? 'doing' : 'done',
       })
 
       return todo
