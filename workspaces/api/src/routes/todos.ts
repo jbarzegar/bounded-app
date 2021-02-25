@@ -28,10 +28,7 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
   app.get('/', (_, res) => {
     actions
       .getAll()
-      .then(todos => {
-        console.log(todos)
-        res.status(200).send(todos)
-      })
+      .then(todos => res.status(200).send(todos))
       .catch(err => res.status(400).send(err))
   })
 
@@ -61,12 +58,11 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
       .catch(err => res.status(500).json(err).send())
   })
 
-  app.patch<IdParams, any, EditTodoPayload>('/:id', async (req, res) => {
-    console.log('body', req.body)
+  app.patch<IdParams, any, EditTodoPayload>('/:id', async (req, res) =>
     actions
       .updateOne(req.params.id, req.body)
       .then(todo => res.status(200).json(todo))
-  })
+  )
 
   app.patch<IdParams, any, IdParams>('/:id/toggle', async (req, res) => {
     actions
@@ -76,7 +72,7 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
   })
 
   app.delete<IdParams>('/:id', async (req, res) => {
-    actions.deleteOne(req.params.id).then(() => res.send(204))
+    actions.deleteOne(req.params.id).then(() => res.sendStatus(204))
   })
 
   return app

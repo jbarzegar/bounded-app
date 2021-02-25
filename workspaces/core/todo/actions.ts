@@ -6,7 +6,7 @@ export interface ITodoActions {
   getOne(id: string): Promise<Todo>
   createOne(payload: AddTodoPayload): Promise<Todo>
   updateOne(id: string, payload: EditTodoPayload): Promise<Todo>
-  toggleTodo(id: string, old: Todo): Promise<Todo>
+  toggleTodo(id: string, oldTodo: Todo): Promise<Todo>
   deleteOne(id: string): Promise<void>
 }
 

@@ -25,10 +25,9 @@ import {
   useQueryGetAllTodos,
   useMutationCreateTodo,
   useMutationDeleteTodo,
-  Queries,
+  useUpdateTodo,
+  useRemoveTodo,
 } from 'state/todo'
-import { useQueryClient } from 'react-query'
-import { Todo } from '@app/core/todo'
 
 type FieldProps = {
   id?: string
@@ -77,32 +76,18 @@ const NewTodo: FC<NewTodoProps> = ({ onCreate }) => {
 }
 
 const TodoList = () => {
-  const queryClient = useQueryClient()
+  const updateTodo = useUpdateTodo()
+  const removeTodo = useRemoveTodo()
   const { status, data = [], refetch } = useQueryGetAllTodos()
   const toggleTodoMutation = useMutationToggleTodo({
-    onSuccess(data) {
-      queryClient.setQueryData<Todo[]>(Queries.all, old => {
-        if (!old) return []
-
-        const copy = [...old]
-        const tIndex = copy.findIndex(x => x.id === data.id)
-
-        if (tIndex === -1) return old
-
-        copy[tIndex] = data
-
-        return copy
-      })
-    },
-  })
-  const deleteTodoMutation = useMutationDeleteTodo({
-    onSuccess() {
+    onSuccess: response => updateTodo(response),
+    onError() {
       refetch()
     },
   })
-
-  const toggleTodo = (id: string, old: Todo) =>
-    toggleTodoMutation.mutate({ id, old })
+  const deleteTodoMutation = useMutationDeleteTodo({
+    onSuccess: (_, { id }) => removeTodo(id),
+  })
 
   return (
     <Card>
@@ -123,7 +108,9 @@ const TodoList = () => {
               <Checkbox
                 color='primary'
                 checked={todo.status === 'done'}
-                onChange={e => toggleTodo(todo.id, todo)}
+                onChange={_ =>
+                  toggleTodoMutation.mutate({ id: todo.id, old: todo })
+                }
               />
               <ListItemText>{todo.title}</ListItemText>
               <Box ml='auto'>
