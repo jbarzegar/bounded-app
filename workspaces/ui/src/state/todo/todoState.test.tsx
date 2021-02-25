@@ -70,7 +70,7 @@ describe('useMutationToggleTodo', () => {
     expect(result.current.status).toEqual('idle')
     const [todo] = await bindings.getAll()
 
-    act(() => result.current.mutate({ id: todo.id, done: true }))
+    act(() => result.current.mutate({ id: todo.id, old: todo }))
     await waitForNextUpdate()
 
     expect(result.current.status).toEqual('loading')

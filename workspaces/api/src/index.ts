@@ -9,14 +9,9 @@ import { todoRoute } from 'routes/todos'
 const app = express()
 
 app.use(morgan('dev'))
-
-const binding = new LowDbBindings()
-const actions = new TodoActions(binding)
-
-app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
-app.use('/api/todo', todoRoute(actions))
 
+app.use('/api/todo', todoRoute(new TodoActions(new LowDbBindings())))
 
 const port = 5000
 app.listen(port, () => console.log('listening on port', port))

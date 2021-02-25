@@ -13,14 +13,14 @@ type MutationFn<Response, Variables, Error = unknown> = (
   options?: MutationOptions<Response, Error, Variables>
 ) => UseMutationResult<Response, Error, Variables>
 
-type ToggleTodoMutationVariables = { id: string; done: boolean }
+type ToggleTodoMutationVariables = { id: string; old: Todo }
 type FnUseMutationToggleTodo = MutationFn<Todo, ToggleTodoMutationVariables>
 export const useMutationToggleTodo: FnUseMutationToggleTodo = options => {
   const actions = useTodoActions()
 
   const todoMutation = useMutation(
     Mutations.toggle,
-    ({ id, done }) => actions.toggleTodo(id, done),
+    ({ id, old }) => actions.toggleTodo(id, old),
     options
   )
 

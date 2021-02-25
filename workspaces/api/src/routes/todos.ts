@@ -62,7 +62,7 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
   })
 
   app.patch<IdParams, any, EditTodoPayload>('/:id', async (req, res) => {
-    console.log('body', (req.body))
+    console.log('body', req.body)
     actions
       .updateOne(req.params.id, req.body)
       .then(todo => res.status(200).json(todo))
@@ -70,7 +70,7 @@ export const todoRoute: FnUseRoute<TodoActions> = actions => {
 
   app.patch<IdParams, any, IdParams>('/:id/toggle', async (req, res) => {
     actions
-      .toggleTodo(req.params.id)
+      .toggleTodo(req.params.id, await actions.getOne(req.params.id))
       .then(todo => res.status(201).json(todo).send())
       .catch(err => res.status(500).json(err).send())
   })

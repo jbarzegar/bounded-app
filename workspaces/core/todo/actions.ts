@@ -6,7 +6,7 @@ export interface ITodoActions {
   getOne(id: string): Promise<Todo>
   createOne(payload: AddTodoPayload): Promise<Todo>
   updateOne(id: string, payload: EditTodoPayload): Promise<Todo>
-  toggleTodo(id: string, done: boolean): Promise<Todo>
+  toggleTodo(id: string, old: Todo): Promise<Todo>
   deleteOne(id: string): Promise<void>
 }
 
@@ -46,9 +46,8 @@ export class TodoActions implements ITodoActions {
     return this.binding.get(id)
   }
 
-  async toggleTodo(id: string, done?: boolean): Promise<Todo> {
+  async toggleTodo(id: string, { status }: Todo): Promise<Todo> {
     try {
-      const { status } = await this.getOne(id)
       const newStatus = status === 'doing' ? 'done' : 'doing'
 
       const todo = await this.binding.update(id, {
