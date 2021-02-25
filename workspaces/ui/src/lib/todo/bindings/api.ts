@@ -1,3 +1,5 @@
+import axios, { AxiosInstance } from 'axios'
+
 import {
   Todo,
   ITodoBindings,
@@ -7,63 +9,41 @@ import {
 
 export class ApiBinding implements ITodoBindings {
   apiUrl: string
+  api: AxiosInstance
 
   constructor(config: { apiUrl: string }) {
     this.apiUrl = config.apiUrl
+
+    this.api = axios.create({ baseURL: config.apiUrl })
   }
 
   async getAll(): Promise<Todo[]> {
-    const resp = await fetch(this.apiUrl)
+    const resp = await this.api.get<Todo[]>('')
 
-    if (!resp.ok) throw resp
-
-    const data: Todo[] = await resp.json()
-
-    return data
+    return resp.data
   }
 
   async get(id: string): Promise<Todo> {
-    // throw new Error('Method not implemented.')
-    const resp = await fetch(`${this.apiUrl}/${id}`)
+    const resp = await this.api.get<Todo>(id)
 
-    if (!resp.ok) throw resp
-
-    const data: Todo = await resp.json()
-
-    return data
+    return resp.data
   }
 
   async add(payload: AddTodoPayload): Promise<Todo> {
-    const resp = await fetch(this.apiUrl, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    })
+    const resp = await this.api.post<Todo>('', payload)
 
-    if (!resp.ok) throw resp
-
-    const data: Todo = await resp.json()
-
-    return data
+    return resp.data
   }
 
   async update(id: string, updateData: EditTodoPayload): Promise<Todo> {
-    const resp = await fetch(`${this.apiUrl}/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(updateData),
-    })
+    const resp = await this.api.patch(id, updateData)
 
-    if (!resp.ok) throw resp
-
-    const data: Todo = await resp.json()
-
-    return data
+    return resp.data
   }
 
   async delete(id: string): Promise<void> {
     try {
-      const resp = await fetch(`${this.apiUrl}/${id}`, { method: 'DELETE' })
-
-      if (!resp.ok) throw resp
+      await this.api.delete(id)
 
       return
     } catch (e) {
