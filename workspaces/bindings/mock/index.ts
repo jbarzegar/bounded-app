@@ -4,7 +4,7 @@ import {
   ITodoBindings,
   AddTodoPayload,
   EditTodoPayload,
-} from '../'
+} from '@app/core/todo'
 
 const sleep = (timeout: number) =>
   new Promise(resolve =>

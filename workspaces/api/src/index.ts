@@ -2,8 +2,8 @@ import express from 'express'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import { TodoActions } from '@app/core/todo'
+import { LowDbBindings } from '@app/bindings'
 
-import { LowDbBindings } from 'lib/todo/bindings/lowdb'
 import { todoRoute } from 'routes/todos'
 
 const app = express()

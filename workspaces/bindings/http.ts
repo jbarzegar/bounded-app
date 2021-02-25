@@ -7,7 +7,7 @@ import {
   EditTodoPayload,
 } from '@app/core/todo'
 
-export class ApiBinding implements ITodoBindings {
+export class HTTPBinding implements ITodoBindings {
   apiUrl: string
   api: AxiosInstance
 

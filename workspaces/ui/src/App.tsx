@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { ThemeProvider } from 'theme'
 import { TodoActions } from '@app/core/todo'
-import { ApiBinding } from 'lib/todo/bindings/api'
+import { HTTPBinding } from '@app/bindings'
 
 import { TodoActionProvider } from 'state/todo/actions'
 import { TodoRoot } from 'view/TodoRoot'
@@ -27,7 +27,7 @@ const App: React.FC = () => {
       <TodoActionProvider
         bindings={
           new TodoActions(
-            new ApiBinding({
+            new HTTPBinding({
               apiUrl: process.env.REACT_APP_API_URL || '/api/todo',
             })
           )

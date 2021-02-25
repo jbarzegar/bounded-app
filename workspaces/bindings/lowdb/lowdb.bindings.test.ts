@@ -1,5 +1,5 @@
 import { AddTodoPayload } from '@app/core/todo'
-import { LowDbBindings, DbErrors } from './lowdb'
+import { LowDbBindings, DbErrors } from '.'
 import MemoryAdapter from 'lowdb/adapters/Memory'
 
 const sampleTodos: AddTodoPayload[] = [

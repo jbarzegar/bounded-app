@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react/types-6-0'
 import { TodoActions } from '@app/core/todo'
-import { MockTodoBinding } from '@app/core/todo/mockBinding'
+import { MockTodoBinding } from '@app/bindings'
 
 import { AppProvider } from 'App'
 import { TodoRoot } from 'view/TodoRoot'
