@@ -3,7 +3,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { ThemeProvider } from 'theme'
 import { TodoActions } from '@app/core/todo'
-import { MockTodoBinding } from '@app/core/todo/mockBinding'
+import { ApiBinding } from 'lib/todo/bindings/api'
+
 import { TodoActionProvider } from 'state/todo/actions'
 import { TodoRoot } from 'view/TodoRoot'
 
@@ -23,7 +24,15 @@ export const AppProvider: FC<PropsWithChildren<AppProviderProps>> = ({
 const App: React.FC = () => {
   return (
     <AppProvider>
-      <TodoActionProvider bindings={new TodoActions(new MockTodoBinding())}>
+      <TodoActionProvider
+        bindings={
+          new TodoActions(
+            new ApiBinding({
+              apiUrl: process.env.REACT_APP_API_URL || '/api/todo',
+            })
+          )
+        }
+      >
         <TodoRoot />
       </TodoActionProvider>
     </AppProvider>

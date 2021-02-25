@@ -61,7 +61,9 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/yup": "^0.29.11",
+    "http-proxy-middleware": "^1.0.6",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.1"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

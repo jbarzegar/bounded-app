@@ -40,6 +40,8 @@ export class LowDbBindings implements ITodoBindings {
     this.db = lowdb(adapter)
 
     this.db.defaults({ todos: [] }).write()
+
+    this.update = this.update.bind(this)
   }
 
   async getAll(): Promise<Todo[]> {

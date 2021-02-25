@@ -18,6 +18,7 @@ export class TodoActions implements ITodoActions {
 
     // damn it js
     this.createOne = this.createOne.bind(this)
+    this.toggleTodo = this.toggleTodo.bind(this)
   }
 
   async createOne(payload: AddTodoPayload): Promise<Todo> {
@@ -48,8 +49,10 @@ export class TodoActions implements ITodoActions {
   async toggleTodo(id: string, done?: boolean): Promise<Todo> {
     try {
       const { status } = await this.getOne(id)
+      const newStatus = status === 'doing' ? 'done' : 'doing'
+
       const todo = await this.binding.update(id, {
-        status: status === 'done' ? 'doing' : 'done',
+        status: newStatus,
       })
 
       return todo
