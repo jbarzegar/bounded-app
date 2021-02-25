@@ -14,8 +14,9 @@ module.exports = conf => {
 
     const newIncludePaths = [
       // relative path to my yarn workspace library
-      path.resolve(__dirname, '../core'),
-    ]
+      'core',
+      'bindings',
+    ].map(p => path.resolve(__dirname, '..', p))
     if (tsxRule) {
       if (Array.isArray(tsxRule.include)) {
         tsxRule.include = [...tsxRule.include, ...newIncludePaths]

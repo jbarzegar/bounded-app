@@ -21,5 +21,5 @@ type Status = Todo['status']
 export const todoUpdateSchema = yup
   .object(toOptional(todoCreateSchema.fields))
   .shape({
-    status: yup.string().oneOf(['doing', 'done', 'due', 'overdue']),
+    status: yup.string().oneOf<Status>(['doing', 'done', 'due', 'overdue']),
   })

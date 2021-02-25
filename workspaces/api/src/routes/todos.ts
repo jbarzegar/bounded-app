@@ -1,7 +1,7 @@
 import { Router as getRoute } from 'express'
 import { AddTodoPayload, EditTodoPayload, TodoActions } from '@app/core/todo'
 
-import { DbErrors } from 'lib/todo/bindings/lowdb'
+import { DbErrors } from '@app/bindings/lowdb'
 import { TodoCreateSchema, todoCreateSchema } from 'validation/todos.validation'
 import { FnUseRoute } from 'types'
 

@@ -11,5 +11,6 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "isolatedModules": true
-  }
+  },
+  "include": ["http.ts", "lowdb", "mock"]
 }

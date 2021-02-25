@@ -1,6 +1,11 @@
 {
   "name": "@app/bindings",
   "version": "1.0.0",
+  "files": [
+    "http.ts",
+    "lowdb",
+    "mock"
+  ],
   "dependencies": {
     "@app/core": "1.0.0",
     "@types/lowdb": "^1.0.9",

@@ -96,6 +96,13 @@ const TodoList = () => {
           <Spinner />
         </Box>
       )}
+      {status === 'error' && (
+        <Box padding={2}>
+          <Header variant='subtitle2' color='error'>
+            An error has occurred. Try again later
+          </Header>
+        </Box>
+      )}
       {status === 'success' && data?.length <= 0 && (
         <Box padding={2}>
           <Header variant='subtitle1'>You have no todos</Header>
