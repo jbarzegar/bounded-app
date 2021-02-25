@@ -1,4 +1,4 @@
-const path = require('path')
+const webpackOverride = require('../weback-override')
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -7,12 +7,5 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/preset-create-react-app',
   ],
-  webpackFinal: conf => {
-    conf.resolve.modules = [
-      ...conf.resolve.modules,
-      path.resolve(__dirname, '../src'),
-    ]
-
-    return conf
-  },
+  webpackFinal: webpackOverride,
 }
